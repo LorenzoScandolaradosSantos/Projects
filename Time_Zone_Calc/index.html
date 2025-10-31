@@ -39,8 +39,6 @@
                         <option value="Australia/Darwin">Darwin (ACST, UTC+9:30)</option>
                         <option value="Australia/Sydney">Sydney (AEDT, UTC+11)</option>
                         <option value="Pacific/Auckland">Auckland (NZDT, UTC+13)</option>
-
-
                 </select>
                 
                 <div class="time-date-container">
@@ -81,8 +79,6 @@
                     <option value="Australia/Darwin">Darwin (ACST, UTC+9:30)</option>
                     <option value="Australia/Sydney">Sydney (AEDT, UTC+11)</option>
                     <option value="Pacific/Auckland">Auckland (NZDT, UTC+13)</option>
-
-
                 </select>
                 
                 <div class="result-display" id="result">
@@ -91,11 +87,15 @@
             </div>
         </div>
 
+        <div class="invert-button-container">
+            <button id="invertBtn" class="invert-button">Invert calculation</button>
+        </div>
+
         <div class="calendar">
             <div class="calendar-header">
-                <button class="calendar-nav" onclick="changeMonth(-1)">← Prev</button>
+                <button class="calendar-nav" id="prevMonth">← Prev</button>
                 <h3 id="calendarTitle">Calendar</h3>
-                <button class="calendar-nav" onclick="changeMonth(1)">Next →</button>
+                <button class="calendar-nav" id="nextMonth">Next →</button>
             </div>
             
             <div class="calendar-grid" id="calendar"></div>
@@ -113,203 +113,6 @@
         </div>
     </div>
 
-    <script>
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
-        let sourceDate = null;
-        let targetDate = null;
-
-        // Set default date and time to now
-        const now = new Date();
-        document.getElementById('sourceDate').valueAsDate = now;
-        document.getElementById('sourceTime').value = now.toTimeString().slice(0, 5);
-
-        function convertTimezone() {
-            const sourceTz = document.getElementById('sourceTimezone').value;
-            const targetTz = document.getElementById('targetTimezone').value;
-            const date = document.getElementById('sourceDate').value;
-            const time = document.getElementById('sourceTime').value;
-
-            if (!date || !time) return;
-
-            // Create date string in source timezone
-            const dateTimeString = `${date}T${time}`;
-            
-            // Parse the date/time in the source timezone
-            const sourceDateTime = new Date(dateTimeString);
-            
-            // Format in source timezone
-            const sourceFormatted = new Intl.DateTimeFormat('en-US', {
-                timeZone: sourceTz,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            }).format(sourceDateTime);
-
-            // Get the actual UTC time by parsing in source timezone
-            const sourceParts = sourceFormatted.match(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+)/);
-            const utcDate = new Date(Date.UTC(
-                parseInt(sourceParts[3]),
-                parseInt(sourceParts[1]) - 1,
-                parseInt(sourceParts[2]),
-                parseInt(sourceParts[4]),
-                parseInt(sourceParts[5])
-            ));
-
-            // Get timezone offset for source
-            const sourceOffset = getTimezoneOffset(sourceTz, sourceDateTime);
-            utcDate.setMinutes(utcDate.getMinutes() - sourceOffset);
-
-            // Format in target timezone
-            const targetFormatted = new Intl.DateTimeFormat('en-US', {
-                timeZone: targetTz,
-                weekday: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            }).format(utcDate);
-
-            // Get target date for calendar
-            const targetDateParts = new Intl.DateTimeFormat('en-US', {
-                timeZone: targetTz,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            }).format(utcDate);
-
-            const [tMonth, tDay, tYear] = targetDateParts.split('/');
-            
-            sourceDate = sourceDateTime;
-            targetDate = new Date(tYear, tMonth - 1, tDay);
-
-            document.getElementById('result').textContent = targetFormatted;
-            renderCalendar();
-        }
-
-        function getTimezoneOffset(timezone, date) {
-            const formatted = new Intl.DateTimeFormat('en-US', {
-                timeZone: timezone,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            }).format(date);
-
-            const utcFormatted = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'UTC',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            }).format(date);
-
-            const tzDate = new Date(formatted.replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+):(\d+)/, '$3-$1-$2T$4:$5:$6'));
-            const utcDate = new Date(utcFormatted.replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+):(\d+)/, '$3-$1-$2T$4:$5:$6'));
-
-            return (tzDate - utcDate) / 60000;
-        }
-
-        function renderCalendar() {
-            const calendar = document.getElementById('calendar');
-            calendar.innerHTML = '';
-
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            const lastDay = new Date(currentYear, currentMonth + 1, 0);
-            const daysInMonth = lastDay.getDate();
-            const startingDayOfWeek = firstDay.getDay();
-
-            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'];
-            
-            document.getElementById('calendarTitle').textContent = 
-                `${monthNames[currentMonth]} ${currentYear}`;
-
-            // Day headers
-            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            dayHeaders.forEach(day => {
-                const header = document.createElement('div');
-                header.className = 'calendar-day-header';
-                header.textContent = day;
-                calendar.appendChild(header);
-            });
-
-            // Empty cells before first day
-            for (let i = 0; i < startingDayOfWeek; i++) {
-                const empty = document.createElement('div');
-                empty.className = 'calendar-day empty';
-                calendar.appendChild(empty);
-            }
-
-            // Days of month
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayCell = document.createElement('div');
-                dayCell.className = 'calendar-day';
-                dayCell.textContent = day;
-
-                const cellDate = new Date(currentYear, currentMonth, day);
-                
-                let isSource = false;
-                let isTarget = false;
-
-                if (sourceDate && 
-                    cellDate.getDate() === sourceDate.getDate() &&
-                    cellDate.getMonth() === sourceDate.getMonth() &&
-                    cellDate.getFullYear() === sourceDate.getFullYear()) {
-                    isSource = true;
-                }
-
-                if (targetDate && 
-                    cellDate.getDate() === targetDate.getDate() &&
-                    cellDate.getMonth() === targetDate.getMonth() &&
-                    cellDate.getFullYear() === targetDate.getFullYear()) {
-                    isTarget = true;
-                }
-
-                if (isSource && isTarget) {
-                    dayCell.className += ' both-dates';
-                } else if (isSource) {
-                    dayCell.className += ' source-date';
-                } else if (isTarget) {
-                    dayCell.className += ' target-date';
-                }
-
-                calendar.appendChild(dayCell);
-            }
-        }
-
-        function changeMonth(delta) {
-            currentMonth += delta;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            } else if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar();
-        }
-
-        // Event listeners
-        document.getElementById('sourceTimezone').addEventListener('change', convertTimezone);
-        document.getElementById('targetTimezone').addEventListener('change', convertTimezone);
-        document.getElementById('sourceDate').addEventListener('change', convertTimezone);
-        document.getElementById('sourceTime').addEventListener('change', convertTimezone);
-
-        // Initial render
-        renderCalendar();
-        convertTimezone();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

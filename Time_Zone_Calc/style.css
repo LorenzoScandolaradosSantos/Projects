@@ -231,3 +231,35 @@ select:focus, input:focus {
         grid-template-columns: 1fr;
     }
 }
+
+/* Invert Calculation Button Styles */
+.invert-button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.invert-button {
+    width: 100%;
+    max-width: 800px;
+    padding: 12px 0;
+    background-color: #ffffffab;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    cursor: pointer;
+    color: #2f3438;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+}
+
+.invert-button:hover {
+    background-color: #2400a542;
+    transform: translateY(-2px);
+}
+
+.invert-button:active {
+    transform: translateY(0);
+}
