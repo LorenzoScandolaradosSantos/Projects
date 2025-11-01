@@ -73,10 +73,10 @@ select:focus, input:focus {
     border-color: #667eea;
 }
 
-/* New styles for side-by-side time and date */
+/* Updated styles for time-date container with AM/PM */
 .time-date-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
 }
 
@@ -92,6 +92,34 @@ select:focus, input:focus {
 .input-group input {
     margin-bottom: 0;
 }
+
+/* AM/PM Toggle Styles */
+.ampm-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.ampm-toggle {
+    padding: 10px 5px; /* Reduced left-right padding to 5px */
+    background-color: #ffffff;
+    border: 2px solid #dee2e6;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #495057;
+    transition: all 0.3s;
+    margin-top: 0;
+    height: 42px; /* Match input height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px; /* Ensure minimum width */
+}
+
+.ampm-toggle:hover {
+    background-color: #f0f0f0;
+}
+
 
 .result-display {
     background: #667eea;
@@ -241,7 +269,6 @@ select:focus, input:focus {
 
 .invert-button {
     width: 100%;
-    max-width: 800px;
     padding: 12px 0;
     background-color: #ffffffab;
     border-radius: 10px;
