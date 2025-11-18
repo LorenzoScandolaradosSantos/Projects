@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hourly Rate Calculator</title>
-     <link rel="icon" type="image/png" href="icon.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Hourly Rate Calculator</h1>
         
-        <div class="calculator-section">
+        <div class="calculator-stack">
             <div class="calculator-block">
                 <h2>Calculate Your Hourly Rate</h2>
                 
@@ -35,10 +34,6 @@
                     <input type="number" id="hoursPerWeek" placeholder="Enter hours per week" value="40">
                 </div>
                 
-                <div class="button-container">
-                    <button class="calculate-button" id="calculateHourlyRate">Calculate Hourly Rate</button>
-                </div>
-                
                 <div class="result-display" id="hourlyRateResult">
                     Enter your salary details to calculate
                 </div>
@@ -59,6 +54,55 @@
                 
                 <div class="work-time-result" id="workTimeResult">
                     Enter target amount to calculate work time
+                </div>
+            </div>
+
+            <div class="calculator-block">
+                <h2>Detailed Work Time for Amount</h2>
+                
+                <div class="auto-calculation-note">
+                    Enter your daily work schedule for precise calculations
+                </div>
+                
+                <div class="input-group">
+                    <label>Target Amount ($):</label>
+                    <input type="number" id="detailedTargetAmount" placeholder="Enter target amount">
+                    <div class="calculation-status" id="detailedTargetCalculationStatus"></div>
+                </div>
+                
+                <div class="daily-hours-container">
+                    <div class="daily-hour-input">
+                        <label>Monday (hours):</label>
+                        <input type="number" id="mondayHours" placeholder="0" min="0" max="24" value="0">
+                    </div>
+                    <div class="daily-hour-input">
+                        <label>Tuesday (hours):</label>
+                        <input type="number" id="tuesdayHours" placeholder="0" min="0" max="24" value="0">
+                    </div>
+                    <div class="daily-hour-input">
+                        <label>Wednesday (hours):</label>
+                        <input type="number" id="wednesdayHours" placeholder="0" min="0" max="24" value="0">
+                    </div>
+                    <div class="daily-hour-input">
+                        <label>Thursday (hours):</label>
+                        <input type="number" id="thursdayHours" placeholder="0" min="0" max="24" value="0">
+                    </div>
+                    <div class="daily-hour-input">
+                        <label>Friday (hours):</label>
+                        <input type="number" id="fridayHours" placeholder="0" min="0" max="24" value="0">
+                    </div>
+                    <div class="daily-hour-input">
+                        <label>Saturday (hours):</label>
+                        <input type="number" id="saturdayHours" placeholder="0" min="0" max="24" value="0">
+                    </div>
+                    <div class="daily-hour-input">
+                        <label>Sunday (hours):</label>
+                        <input type="number" id="sundayHours" placeholder="0" min="0" max="24" value="0">
+                    </div>
+                </div>
+                
+                <div class="detailed-work-time-result" id="detailedWorkTimeResult">
+                    Enter target amount and daily hours
                 </div>
             </div>
         </div>
